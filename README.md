@@ -2,7 +2,7 @@
 
 小学2年生向けの国語文章題アプリ。子どもが「たんてい」になって、書き下ろしの短い文章を読み、3つの「なぞ」(設問)に答える。全12話(物語6話+説明文6話)×3問=36問。
 
-- 公開URL: https://mikushiba.github.io/yomitori-tantei/
+- 公開URL: https://mikushiba.github.io/yomitori/
 - 本体: `index.html` 1ファイルで完結。サーバー不要、`file://` で直接開いても動く。
 
 ## 設計思想
