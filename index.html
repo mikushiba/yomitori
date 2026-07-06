@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>よみとりたんてい — 小2 こくご 文しょうだい</title>
+<style>
+/* ============ tokens ============ */
+:root{
+  --paper:#F5F3EA;          /* 生成りの紙、原稿用紙寄りのわずかな緑み */
+  --card:#FFFDF6;
+  --ink:#33322B;
+  --ink-soft:#78766A;
+  --kei:#C9DACB;            /* 原稿用紙の罫の薄緑 */
+  --kei-strong:#5F8D72;     /* 罫の濃い緑 */
+  --shu:#D14E2C;            /* 朱筆の赤 */
+  --shu-soft:#F6E0D6;
+  --star:#DFA32E;
+  --star-soft:#F7ECD2;
+  --ok-bg:#EAF2EB;
+  --ng-bg:#F6E4DE;
+  --shadow:0 2px 10px rgba(70,80,60,.10);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#22241E;
+    --card:#2C2E27;
+    --ink:#ECE9DD;
+    --ink-soft:#A5A294;
+    --kei:#414A41;
+    --kei-strong:#82B294;
+    --shu:#EF7A50;
+    --shu-soft:#4A3227;
+    --star:#E5B54A;
+    --star-soft:#453A22;
+    --ok-bg:#2F3A30;
+    --ng-bg:#43302A;
+    --shadow:0 2px 10px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="light"]{
+  --paper:#F5F3EA; --card:#FFFDF6; --ink:#33322B; --ink-soft:#78766A;
+  --kei:#C9DACB; --kei-strong:#5F8D72; --shu:#D14E2C; --shu-soft:#F6E0D6;
+  --star:#DFA32E; --star-soft:#F7ECD2; --ok-bg:#EAF2EB; --ng-bg:#F6E4DE;
+  --shadow:0 2px 10px rgba(70,80,60,.10);
+}
+:root[data-theme="dark"]{
+  --paper:#22241E; --card:#2C2E27; --ink:#ECE9DD; --ink-soft:#A5A294;
+  --kei:#414A41; --kei-strong:#82B294; --shu:#EF7A50; --shu-soft:#4A3227;
+  --star:#E5B54A; --star-soft:#453A22; --ok-bg:#2F3A30; --ng-bg:#43302A;
+  --shadow:0 2px 10px rgba(0,0,0,.35);
+}
+
+/* ============ base ============ */
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"UD デジタル 教科書体 N-R","UD Digi Kyokasho N-R","Klee One","Hiragino Maru Gothic ProN","BIZ UDPGothic","Yu Gothic",sans-serif;
+  line-height:1.8;
+}
+#app{ max-width:860px; margin:0 auto; padding:16px 16px 64px; }
+button{
+  font-family:inherit; font-size:1rem; color:var(--ink);
+  border:2px solid var(--kei); border-radius:var(--radius);
+  background:var(--card); padding:10px 16px; cursor:pointer;
+}
+button:focus-visible, a:focus-visible{ outline:3px solid var(--kei-strong); outline-offset:2px; }
+ruby rt{ font-size:.45em; color:var(--ink-soft); letter-spacing:0; }
+.hidden{ display:none !important; }
+
+/* ============ home ============ */
+.cover{
+  background:var(--card); border:2px solid var(--kei); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:28px 24px 22px; text-align:center; position:relative; overflow:hidden;
+}
+.cover::before{ /* 原稿用紙の縦罫 */
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(90deg, transparent 0 30px, var(--kei) 30px 31px);
+  opacity:.35; pointer-events:none;
+}
+.cover > *{ position:relative; }
+.cover .glass{ margin:0 auto 6px; width:54px; height:54px; position:relative; }
+.cover .glass .lens{
+  width:38px; height:38px; border:5px solid var(--kei-strong); border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, var(--card), var(--kei) 90%);
+}
+.cover .glass .grip{
+  position:absolute; left:36px; top:36px; width:18px; height:7px;
+  background:var(--shu); border-radius:4px; transform:rotate(45deg);
+}
+h1{ font-size:2rem; margin:.1em 0; letter-spacing:.12em; }
+.tagline{ color:var(--ink-soft); margin:0; font-size:1rem; }
+.cover .allclear{
+  display:inline-block; margin-top:10px; color:var(--shu); border:2.5px solid var(--shu);
+  border-radius:50%; padding:14px 10px; font-size:.85rem; line-height:1.4;
+  transform:rotate(-8deg); font-weight:bold;
+}
+.toprow{ display:flex; gap:8px; justify-content:flex-end; margin-bottom:10px; }
+.toprow button{ font-size:.85rem; padding:6px 12px; border-radius:999px; }
+
+.chapter{ margin-top:26px; }
+.chapter h2{
+  font-size:1.05rem; letter-spacing:.08em; margin:0 0 10px;
+  display:flex; align-items:baseline; gap:10px;
+}
+.chapter h2 .rank{ color:var(--kei-strong); font-size:.85rem; }
+.cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+.pcard{
+  text-align:left; display:flex; flex-direction:column; gap:6px; padding:14px;
+  box-shadow:var(--shadow); position:relative; min-height:104px;
+}
+.pcard:hover{ border-color:var(--kei-strong); }
+.pcard .kind{
+  align-self:flex-start; font-size:.72rem; letter-spacing:.15em; padding:1px 10px;
+  border-radius:999px; border:1.5px solid;
+}
+.kind.story{ color:var(--shu); border-color:var(--shu); background:var(--shu-soft); }
+.kind.expo{ color:var(--kei-strong); border-color:var(--kei-strong); background:var(--ok-bg); }
+.pcard .ttl{ font-size:1.05rem; line-height:1.5; }
+.pcard .stars{ color:var(--star); letter-spacing:.15em; font-size:1rem; }
+.pcard .stars .off{ color:var(--kei); }
+.pcard .stamp-mini{
+  position:absolute; right:10px; bottom:10px; color:var(--shu); border:2px solid var(--shu);
+  border-radius:50%; width:44px; height:44px; display:grid; place-items:center;
+  font-size:.62rem; line-height:1.25; text-align:center; transform:rotate(-12deg); opacity:.9;
+}
+.homefoot{ margin-top:30px; text-align:center; }
+.homefoot button{ font-size:.85rem; color:var(--ink-soft); border-style:dashed; }
+
+/* ============ reading ============ */
+.bar{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+.bar .ttl{ font-size:1.1rem; flex:1; min-width:120px; }
+.bar button{ font-size:.85rem; padding:6px 12px; border-radius:999px; }
+.bar button[aria-pressed="true"]{ border-color:var(--kei-strong); background:var(--ok-bg); }
+
+.storywrap{
+  background:var(--card); border:2px solid var(--kei); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:20px; position:relative;
+}
+.story{
+  font-size:1.28rem; line-height:2.15; letter-spacing:.03em; max-height:46vh; overflow:auto;
+}
+.story.vertical{
+  writing-mode:vertical-rl; max-height:none; height:min(60vh,520px); overflow-x:auto; overflow-y:hidden;
+  padding-left:6px;
+}
+.story .s{ transition:background .25s; border-radius:6px; padding:1px 2px; }
+.story .s.evi{
+  background:linear-gradient(transparent 15%, var(--star-soft) 15% 90%, transparent 90%);
+  box-shadow:inset 0 0 0 1.5px var(--star);
+}
+.story.vertical .s.evi{
+  background:var(--star-soft);
+}
+.story .s.reading{ background:var(--ok-bg); }
+.evi-note{
+  margin:10px 0 0; font-size:.85rem; color:var(--shu); display:flex; gap:6px; align-items:center;
+}
+
+.qcard{
+  margin-top:16px; background:var(--card); border:2px solid var(--kei); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:18px 20px;
+}
+.qhead{ display:flex; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+.qtype{
+  font-size:.75rem; letter-spacing:.12em; color:var(--kei-strong);
+  border:1.5px solid var(--kei-strong); border-radius:999px; padding:1px 10px; background:var(--ok-bg);
+}
+.dots{ margin-left:auto; display:flex; gap:6px; }
+.dots i{ width:10px; height:10px; border-radius:50%; background:var(--kei); }
+.dots i.now{ background:var(--kei-strong); }
+.dots i.got{ background:var(--star); }
+.qtext{ font-size:1.18rem; margin:6px 0 14px; }
+.choices{ display:grid; gap:10px; }
+.choices button{
+  text-align:left; font-size:1.08rem; padding:12px 16px; line-height:1.7;
+}
+.choices button:hover:not(:disabled){ border-color:var(--kei-strong); }
+.choices button:disabled{ cursor:default; }
+.choices button.right{ border-color:var(--shu); background:var(--ok-bg); }
+.choices button.right::after{ content:"◯"; color:var(--shu); font-weight:bold; margin-left:8px; }
+.choices button.wrong{ border-color:var(--ink-soft); background:var(--ng-bg); opacity:.75; }
+.choices button.shake{ animation:shake .35s; }
+@keyframes shake{ 25%{transform:translateX(-5px);} 50%{transform:translateX(5px);} 75%{transform:translateX(-3px);} }
+
+.fb{ margin-top:14px; font-size:1.02rem; border-radius:var(--radius); padding:12px 16px; }
+.fb.good{ background:var(--ok-bg); border:1.5px solid var(--kei-strong); }
+.fb.retry{ background:var(--star-soft); border:1.5px solid var(--star); }
+.fb.ans{ background:var(--shu-soft); border:1.5px solid var(--shu); }
+.fb .why{ display:block; margin-top:6px; color:var(--ink-soft); font-size:.95rem; }
+.nextrow{ margin-top:14px; text-align:right; }
+.nextrow button{ border-color:var(--kei-strong); background:var(--ok-bg); font-size:1.05rem; padding:10px 26px; }
+
+/* ============ result ============ */
+.result{
+  text-align:center; background:var(--card); border:2px solid var(--kei); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:36px 20px; margin-top:16px;
+}
+.hanamaru{
+  margin:0 auto 14px; width:130px; height:130px; border-radius:50%;
+  border:5px solid var(--shu); display:grid; place-items:center; position:relative;
+  color:var(--shu); transform:rotate(-6deg);
+}
+.hanamaru::before{
+  content:""; position:absolute; inset:8px; border-radius:50%; border:2.5px dashed var(--shu); opacity:.7;
+}
+.hanamaru span{ font-size:1rem; line-height:1.5; font-weight:bold; }
+@media (prefers-reduced-motion:no-preference){
+  .hanamaru{ animation:pop .5s cubic-bezier(.2,1.6,.4,1); }
+  @keyframes pop{ from{ transform:scale(.3) rotate(-30deg); opacity:0; } }
+}
+.result .bigstars{ font-size:2rem; color:var(--star); letter-spacing:.2em; }
+.result .bigstars .off{ color:var(--kei); }
+.result p{ color:var(--ink-soft); }
+.result .btns{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+
+/* ============ parent ============ */
+.parent h2{ font-size:1.2rem; }
+.skill{ margin:14px 0; }
+.skill .lab{ display:flex; justify-content:space-between; font-size:.95rem; }
+.skill .lab b{ font-weight:normal; }
+.skill .num{ color:var(--ink-soft); font-variant-numeric:tabular-nums; font-size:.85rem; }
+.meter{ height:12px; border-radius:999px; background:var(--kei); overflow:hidden; margin-top:4px; }
+.meter i{ display:block; height:100%; background:var(--kei-strong); border-radius:999px; }
+.meter i.low{ background:var(--shu); }
+.advice{
+  margin-top:18px; background:var(--card); border:2px solid var(--kei); border-radius:var(--radius);
+  padding:14px 18px; font-size:.95rem;
+}
+.advice b{ color:var(--shu); font-weight:normal; }
+.parentnote{ color:var(--ink-soft); font-size:.85rem; }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+}
+@media (max-width:520px){
+  h1{ font-size:1.6rem; }
+  .story{ font-size:1.15rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+"use strict";
+
+/* ================= データ ================= */
+/* type: だれ・なに / じゅんばん / きもち / りゆう / こそあど / だいじなこと */
+const SKILLS = {
+  "だれ・なに":{ label:"だれ・なに", parent:"「だれが」「なにを」を正しく拾う力", advice:"音読しながら「だれが」「なにを」に鉛筆で線を引く練習が効きます。設問を先に読んでから本文に戻る順番もおすすめです。" },
+  "じゅんばん":{ label:"じゅんばん", parent:"出来事の順序をつかむ力", advice:"「はじめに」「つぎに」「それから」などの順序の言葉を丸で囲む練習が効きます。料理や工作の手順を口で説明させるのも良い練習です。" },
+  "きもち":{ label:"きもち", parent:"気持ちを読み取る力", advice:"気持ちの言葉だけでなく「その気持ちになった出来事」をセットで探させてください。「どうしてそう思ったの?」と本文を指さして聞くのが効きます。" },
+  "りゆう":{ label:"りゆう", parent:"理由をとらえる力", advice:"本文の「〜から」「〜ため」を探す癖をつけると安定します。答えたあとに「どの文に書いてあった?」と聞き返してあげてください。" },
+  "こそあど":{ label:"こそあど", parent:"「それ」「この」が指すものをつかむ力", advice:"こそあど言葉が出たら、直前の文に戻って指さしで確かめる練習が効きます。当てはめて読み直すと確認できます。" },
+  "だいじなこと":{ label:"だいじなこと", parent:"文章全体の言いたいことをつかむ力", advice:"説明文なら最後の段落、物語なら気持ちが変わった場面に注目させてください。「一言でいうとどんな話?」と聞く練習が効きます。" },
+};
+
+const R = (k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
+
+const PASSAGES = [
+/* ---------- だい1しょう みならいたんてい ---------- */
+{
+  id:"p1", level:1, kind:"story", title:"シロの さんぽ",
+  sentences:[
+    `にちようびの あさ、たけしは ${R("犬","いぬ")}の シロと こうえんへ さんぽに いきました。`,
+    `こうえんには、${R("大","おお")}きな すべりだいが あります。`,
+    `シロは、すべりだいの ${R("下","した")}で ねている ねこを ${R("見","み")}つけました。`,
+    `シロが 「ワン」と ほえると、ねこは びっくりして ${R("木","き")}の ${R("上","うえ")}に にげて いきました。`,
+    `たけしは わらいながら、「シロ、だめだよ。」と いいました。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"たけしと いっしょに さんぽに いったのは、だれですか。",
+      choices:["ねこ","おとうと","犬の シロ","ことり"], answer:2, evidence:[0],
+      explain:"はじめの 文に 「たけしは 犬の シロと こうえんへ さんぽに いきました」と かいて あるね。" },
+    { type:"だれ・なに", q:"ねこは、どこで ねて いましたか。",
+      choices:["木の 上","すべりだいの 下","ベンチの 上","草の 中"], answer:1, evidence:[2],
+      explain:"「すべりだいの 下で ねている ねこ」と かいて あるよ。" },
+    { type:"りゆう", q:"ねこが 木の 上に にげたのは、なぜですか。",
+      choices:["あそびたく なったから","シロが ほえて びっくりしたから","雨が ふって きたから"], answer:1, evidence:[3],
+      explain:"「シロが ほえると、ねこは びっくりして…にげて いきました」。りゆうは この 文に あるね。" },
+  ],
+},
+{
+  id:"p2", level:1, kind:"expo", title:"ひまわりの ひみつ",
+  sentences:[
+    `ひまわりは、なつに さく ${R("大","おお")}きな ${R("花","はな")}です。`,
+    `花の いろは、あかるい きいろです。`,
+    `ひまわりの つぼみには、おもしろい ひみつが あります。`,
+    `つぼみは、おひさまの うごきに あわせて、むきを かえるのです。`,
+    `だから、ひまわりには 「おひさまの 花」と いう よびかたも あります。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"ひまわりは、いつ さく 花ですか。",
+      choices:["はる","なつ","あき","ふゆ"], answer:1, evidence:[0],
+      explain:"はじめの 文に 「なつに さく 大きな 花」と かいて あるね。" },
+    { type:"だれ・なに", q:"ひまわりの つぼみは、なにに あわせて むきを かえますか。",
+      choices:["かぜの むき","おひさまの うごき","人の こえ"], answer:1, evidence:[3],
+      explain:"「おひさまの うごきに あわせて、むきを かえる」と かいて あるよ。" },
+    { type:"りゆう", q:"ひまわりが 「おひさまの 花」と よばれるのは、なぜですか。",
+      choices:["おひさまのように あついから","つぼみが おひさまの うごきに あわせて うごくから","おひさまが すきな 人が うえたから"], answer:1, evidence:[3,4],
+      explain:"「だから」の まえに りゆうが かいて あるね。つぼみが おひさまを おいかけるからだよ。" },
+  ],
+},
+{
+  id:"p3", level:1, kind:"story", title:"あかい ぼうし",
+  sentences:[
+    `${R("川","かわ")}ぞいの みちを、みかが あるいて いました。`,
+    `きゅうに つよい かぜが ふいて、みかの あかい ぼうしが とばされて しまいました。`,
+    `ぼうしは、ころころ ころがって、川に おちそうに なりました。`,
+    `その とき、しらない おねえさんが はしって きて、ぼうしを ひろって くれました。`,
+    `みかは 「ありがとう ございます。」と、おれいを いいました。`,
+    `おねえさんは にっこり わらって、${R("手","て")}を ふって くれました。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"かぜに とばされたのは、なんですか。",
+      choices:["あかい ぼうし","しろい ハンカチ","かばん"], answer:0, evidence:[1],
+      explain:"「みかの あかい ぼうしが とばされて しまいました」と かいて あるね。" },
+    { type:"だれ・なに", q:"ぼうしを ひろって くれたのは、だれですか。",
+      choices:["みかの おかあさん","しらない おねえさん","川の むこうの 男の子"], answer:1, evidence:[3],
+      explain:"「しらない おねえさんが はしって きて、ぼうしを ひろって くれました」と あるよ。" },
+    { type:"きもち", q:"おれいを いった とき、みかは どんな きもちでしたか。",
+      choices:["ぼうしが よごれて かなしい きもち","たすけて もらえて うれしい きもち","かぜに おこって いる きもち"], answer:1, evidence:[3,4],
+      explain:"ひろって もらえたから 「ありがとう」と いったんだね。うれしい きもちが つたわって くるよ。" },
+  ],
+},
+{
+  id:"p4", level:1, kind:"expo", title:"あめの日の カタツムリ",
+  sentences:[
+    `あめの ${R("日","ひ")}に なると、カタツムリを よく ${R("見","み")}かけます。`,
+    `はれの 日には、あまり すがたを 見せません。`,
+    `それは、カタツムリの ${R("体","からだ")}が、かわくことに よわいからです。`,
+    `はれの 日の カタツムリは、はっぱの うらなどで、からに こもって やすんで います。`,
+    `あめの 日は、体が かわく しんぱいが ないので、げんきに うごきまわるのです。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"カタツムリを よく 見かけるのは、どんな 日ですか。",
+      choices:["はれの 日","あめの 日","ゆきの 日"], answer:1, evidence:[0],
+      explain:"はじめの 文に 「あめの 日に なると、カタツムリを よく 見かけます」と あるね。" },
+    { type:"りゆう", q:"はれの 日に カタツムリが すがたを 見せないのは、なぜですか。",
+      choices:["体が かわくことに よわいから","ねぼうして いるから","てきに ねらわれるから"], answer:0, evidence:[2],
+      explain:"「〜からです」の 文が りゆうの 文。「かわくことに よわいから」と かいて あるよ。" },
+    { type:"だれ・なに", q:"はれの 日、カタツムリは どこで やすんで いますか。",
+      choices:["川の 中","はっぱの うら","土の ふかい ところ"], answer:1, evidence:[3],
+      explain:"「はっぱの うらなどで、からに こもって やすんで います」と かいて あるね。" },
+  ],
+},
+/* ---------- だい2しょう いちにんまえたんてい ---------- */
+{
+  id:"p5", level:2, kind:"story", title:"はじめての ホットケーキ",
+  sentences:[
+    `にちようびの あさ、ゆうとは おかあさんと ホットケーキを つくりました。`,
+    `はじめに、ボウルに たまごと ぎゅうにゅうを ${R("入","い")}れて、よく まぜます。`,
+    `つぎに、こなを 入れて、さらに まぜました。`,
+    `それから、フライパンに たねを まるく ながしこみます。`,
+    `ぷつぷつと あなが あいて きたら、ひっくりかえす あいずです。`,
+    `ゆうとは どきどきしながら、フライがえしを つかって、えいっと ひっくりかえしました。`,
+    `きれいな きつねいろを ${R("見","み")}た とき、ゆうとは おもわず 「やったあ。」と さけびました。`,
+  ],
+  questions:[
+    { type:"じゅんばん", q:"こなを 入れるのは、いつですか。",
+      choices:["たまごと ぎゅうにゅうを まぜた あと","フライパンに ながしこんだ あと","いちばん はじめ"], answer:0, evidence:[1,2],
+      explain:"「はじめに たまごと ぎゅうにゅう」「つぎに こな」。じゅんばんの ことばが 目じるしだよ。" },
+    { type:"だれ・なに", q:"ひっくりかえす あいずは、なんですか。",
+      choices:["いい においが する こと","ぷつぷつと あなが あく こと","おかあさんが よぶ こと"], answer:1, evidence:[4],
+      explain:"「ぷつぷつと あなが あいて きたら、ひっくりかえす あいずです」と かいて あるね。" },
+    { type:"きもち", q:"「やったあ。」と さけんだ とき、ゆうとは どんな きもちでしたか。",
+      choices:["じょうずに やけて うれしい きもち","しっぱいして くやしい きもち","おなかが すいて こまった きもち"], answer:0, evidence:[6],
+      explain:"きれいな きつねいろに やけたのを 見て さけんだんだね。せいこうして うれしい きもちだよ。" },
+  ],
+},
+{
+  id:"p6", level:2, kind:"expo", title:"たんぽぽの たねの たび",
+  sentences:[
+    `たんぽぽの ${R("花","はな")}が おわると、しろい わた${R("毛","げ")}が できます。`,
+    `わた毛は、${R("小","ちい")}さな たねに ついた、ふわふわの かさです。`,
+    `かぜが ふくと、わた毛は たねごと そらへ とんで いきます。`,
+    `それは、たんぽぽが たねを とおくまで はこぶための、だいじな くふうです。`,
+    `もし たねが みんな おやの すぐ ${R("下","した")}に おちたら、せまい ばしょで こみあって、${R("大","おお")}きく そだつことが できません。`,
+    `とおくへ とんだ たねは、あたらしい ばしょで、のびのびと めを ${R("出","だ")}すことが できるのです。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"たんぽぽの 花が おわると、なにが できますか。",
+      choices:["あかい み","しろい わた毛","大きな はっぱ"], answer:1, evidence:[0],
+      explain:"はじめの 文に 「しろい わた毛が できます」と かいて あるね。" },
+    { type:"こそあど", q:"「それは、…だいじな くふうです」の 「それ」は、なにを さして いますか。",
+      choices:["わた毛が たねごと そらへ とんで いくこと","花が さくこと","はっぱが ひろがること"], answer:0, evidence:[2,3],
+      explain:"こそあどことばは、すぐ まえの 文を 見るのが きほん。まえの 文には 「わた毛は たねごと そらへ とんで いきます」と あるね。" },
+    { type:"りゆう", q:"たねが とおくへ とぶと よいのは、なぜですか。",
+      choices:["かぜと あそべるから","あたらしい ばしょで のびのび そだてるから","おやの そばは さむいから"], answer:1, evidence:[4,5],
+      explain:"おやの すぐ 下だと こみあって そだてない、とおくなら のびのび そだつ、と かいて あるね。" },
+  ],
+},
+{
+  id:"p7", level:2, kind:"story", title:"さいごまで",
+  sentences:[
+    `きょうは、まちに まった うんどうかいです。`,
+    `かけっこの じゅんばんが きて、りこの むねは どきどきして いました。`,
+    `ピストルの ${R("音","おと")}で、みんなが いっせいに はしりだしました。`,
+    `りこは ${R("二","に")}ばんめを はしって いましたが、とちゅうで ${R("足","あし")}が もつれて、ころんで しまいました。`,
+    `ひざが いたくて、なみだが ${R("出","で")}そうに なりました。`,
+    `その とき、「りこ、がんばれ。」と いう おうえんの こえが きこえました。`,
+    `りこは ぐっと ${R("力","ちから")}を ${R("入","い")}れて ${R("立","た")}ちあがり、さいごまで はしりました。`,
+    `じゅんいは びりでしたが、りこの むねは、ふしぎと あたたかく なって いました。`,
+  ],
+  questions:[
+    { type:"りゆう", q:"りこが ころんで しまったのは、なぜですか。",
+      choices:["くつが ぬげたから","足が もつれたから","だれかに おされたから"], answer:1, evidence:[3],
+      explain:"「とちゅうで 足が もつれて、ころんで しまいました」と かいて あるね。" },
+    { type:"きもち", q:"りこが 立ちあがれたのは、なにが あったからですか。",
+      choices:["おうえんの こえが きこえたから","いたく なかったから","先生に おこられたから"], answer:0, evidence:[5,6],
+      explain:"「その とき」の あとに 目を つけよう。おうえんの こえが きこえて、力を 入れて 立ちあがったんだね。" },
+    { type:"きもち", q:"さいごの りこは、どんな きもちでしたか。",
+      choices:["びりで はずかしい きもちだけ","さいごまで はしれて まんぞくな きもち","うんどうかいが きらいに なった きもち"], answer:1, evidence:[7],
+      explain:"「むねは、ふしぎと あたたかく なって いました」。じゅんいが びりでも、やりきった きもちが あったんだね。" },
+  ],
+},
+{
+  id:"p8", level:2, kind:"expo", title:"ツバメの す",
+  sentences:[
+    `はるに なると、ツバメが とおい みなみの くにから やって きます。`,
+    `ツバメは、どろと かれくさを つかって、${R("人","ひと")}の いえの のきしたに すを つくります。`,
+    `${R("山","やま")}や ${R("森","もり")}では なく、どうして 人の ちかくに すを つくるのでしょうか。`,
+    `それは、ツバメの てきと かんけいが あります。`,
+    `たまごや ひなを ねらう カラスや ヘビは、人が ちかくに いる ばしょが にがてです。`,
+    `人の そばに すを つくれば、てきが ちかよりにくく なるのです。`,
+    `ツバメは、人の くらしを じょうずに つかって、ひなを まもって いるのです。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"ツバメは、なにを つかって すを つくりますか。",
+      choices:["小えだと はっぱ","どろと かれくさ","いとと わた毛"], answer:1, evidence:[1],
+      explain:"「どろと かれくさを つかって…すを つくります」と かいて あるね。" },
+    { type:"りゆう", q:"ツバメが 人の ちかくに すを つくるのは、なぜですか。",
+      choices:["人に えさを もらえるから","てきが ちかよりにくく なるから","いえの 中は あたたかいから"], answer:1, evidence:[4,5],
+      explain:"カラスや ヘビは 人の ちかくが にがて。だから 人の そばだと ひなを まもれるんだね。" },
+    { type:"だいじなこと", q:"この 文しょうが いちばん つたえたいことは、どれですか。",
+      choices:["ツバメは 人の くらしを つかって ひなを まもって いる","ツバメは みなみの くにから くる","カラスは たまごが すきだ"], answer:0, evidence:[6],
+      explain:"せつめいの 文しょうは、さいごの 文に いちばん だいじな ことが まとまって いることが おおいよ。" },
+  ],
+},
+/* ---------- だい3しょう めいたんてい ---------- */
+{
+  id:"p9", level:3, kind:"story", title:"おとうとの うわばき",
+  sentences:[
+    `きんようびの かえりみち、けんたは おとうとの そらと いっしょに あるいて いました。`,
+    `そらは、うわばきの ${R("入","はい")}った ふくろを、ぶんぶん ふりまわして います。`,
+    `「あぶないよ。」と けんたが いった とき、ふくろが ${R("手","て")}から すっぽぬけて、みずたまりに おちて しまいました。`,
+    `うわばきは びしょぬれです。`,
+    `そらの ${R("目","め")}に、みるみる なみだが たまりました。`,
+    `けんたは、ほんとうは 「だから いったのに。」と いいたく なりました。`,
+    `でも、しょんぼりした そらの かおを ${R("見","み")}たら、その ことばを のみこみました。`,
+    `「いえに かえったら、いっしょに あらおう。おにいちゃんも てつだうよ。」`,
+    `そらは はなを すすりながら、${R("小","ちい")}さく うなずきました。`,
+    `${R("日","にち")}ようびの あさ、${R("二人","ふたり")}で あらった うわばきは、おひさまの ひかりで まっしろに かわきました。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"うわばきは、どう なりましたか。",
+      choices:["かぜで とんで いった","みずたまりに おちて びしょぬれに なった","わすれて きて しまった"], answer:1, evidence:[2,3],
+      explain:"「ふくろが 手から すっぽぬけて、みずたまりに おちて しまいました」「うわばきは びしょぬれです」と あるね。" },
+    { type:"きもち", q:"けんたが 「だから いったのに。」を いわなかったのは、なぜですか。",
+      choices:["いうのを わすれたから","しょんぼりした そらを 見て、かわいそうに なったから","おかあさんに とめられたから"], answer:1, evidence:[6],
+      explain:"「しょんぼりした そらの かおを 見たら、その ことばを のみこみました」。そらの きもちを かんがえたんだね。" },
+    { type:"だいじなこと", q:"この おはなしの けんたは、どんな おにいちゃんですか。",
+      choices:["おとうとの きもちを かんがえられる、やさしい おにいちゃん","すぐ おこる、こわい おにいちゃん","あそぶのが きらいな おにいちゃん"], answer:0, evidence:[6,7],
+      explain:"いいたい ことばを のみこんで、「いっしょに あらおう」と いえた ところに、けんたの やさしさが 出て いるね。" },
+  ],
+},
+{
+  id:"p10", level:3, kind:"expo", title:"ダンゴムシの まるまる ひみつ",
+  sentences:[
+    `${R("石","いし")}を そっと どかすと、${R("下","した")}から ダンゴムシが ${R("出","で")}て くることが あります。`,
+    `ゆびで つつくと、ダンゴムシは くるんと まるまって、${R("小","ちい")}さな たまに なります。`,
+    `どうして まるく なるのでしょうか。`,
+    `${R("一","ひと")}つめの わけは、てきから ${R("体","からだ")}を まもるためです。`,
+    `ダンゴムシの せなかは かたいですが、おなかがわは やわらかいのです。`,
+    `まるく なれば、やわらかい おなかを かくすことが できます。`,
+    `じつは、わけは もう${R("一","ひと")}つ あります。`,
+    `ダンゴムシは、体が かわくことに とても よわい ${R("生","い")}きものです。`,
+    `まるく なると、しめった おなかがわが たまの ${R("中","なか")}に かくれて、体の ${R("水分","すいぶん")}が にげにくく なります。`,
+    `小さな 体の うごき ${R("一","ひと")}つにも、${R("二","ふた")}つの だいじな わけが かくれて いるのです。`,
+  ],
+  questions:[
+    { type:"りゆう", q:"ダンゴムシが まるく なる 一つめの わけは、なんですか。",
+      choices:["ころがって あそぶため","てきから 体を まもるため","はやく はしるため"], answer:1, evidence:[3],
+      explain:"「一つめの わけは、てきから 体を まもるためです」と、はっきり かいて あるね。" },
+    { type:"りゆう", q:"まるく なると 体が かわきにくいのは、なぜですか。",
+      choices:["しめった おなかがわが たまの 中に かくれるから","せなかから 水が 出るから","はやく うごけるように なるから"], answer:0, evidence:[8],
+      explain:"「しめった おなかがわが たまの 中に かくれて、水分が にげにくく なります」と かいて あるよ。" },
+    { type:"だいじなこと", q:"この 文しょうが いちばん つたえたいことは、どれですか。",
+      choices:["ダンゴムシは 石の 下に いる","まるまる うごきには 二つの だいじな わけが ある","ダンゴムシの せなかは かたい"], answer:1, evidence:[9],
+      explain:"さいごの 文が まとめの 文。「二つの だいじな わけが かくれて いる」が この 文しょうの しんぞうだよ。" },
+  ],
+},
+{
+  id:"p11", level:3, kind:"story", title:"おばあちゃんの てがみ",
+  sentences:[
+    `がっこうから かえると、ポストに ゆいへの てがみが とどいて いました。`,
+    `とおくに すむ おばあちゃんからです。`,
+    `ふうとうの ${R("中","なか")}には、てがみと いっしょに、おしばなに した すみれが ${R("入","はい")}って いました。`,
+    `てがみには、「にわに さいた ${R("花","はな")}を、ゆいにも ${R("見","み")}せたくて おくります。」と かいて ありました。`,
+    `ゆいは、おばあちゃんの にわを おもいだして、むねが ぽかぽかしました。`,
+    `ゆいは さっそく、へんじを かくことに しました。`,
+    `まず、きのう がっこうで あった たのしいことを かきました。`,
+    `つぎに、がようしに すみれの えを かいて、てがみに そえました。`,
+    `「こんどは、わたしの 花を 見てね。」`,
+    `ゆいは ポストに てがみを ${R("入","い")}れると、はやく とどきますようにと、そっと おねがいしました。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"ふうとうの 中に、てがみと いっしょに 入って いたのは なんですか。",
+      choices:["しゃしん","おしばなに した すみれ","あめだま"], answer:1, evidence:[2],
+      explain:"「てがみと いっしょに、おしばなに した すみれが 入って いました」と かいて あるね。" },
+    { type:"きもち", q:"ゆいの むねが ぽかぽかしたのは、なぜですか。",
+      choices:["へやが あつかったから","おばあちゃんの やさしさが つたわって きたから","あまい ものを たべたから"], answer:1, evidence:[3,4],
+      explain:"「ゆいにも 見せたくて」と いう てがみを よんで、おばあちゃんの にわを おもいだしたんだね。やさしさで 心が あたたかく なったんだよ。" },
+    { type:"じゅんばん", q:"ゆいが へんじで はじめに かいたことは、なんですか。",
+      choices:["すみれの え","がっこうで あった たのしいこと","おねがいごと"], answer:1, evidence:[6],
+      explain:"「まず、きのう がっこうで あった たのしいことを かきました」。「まず」が 目じるしだね。" },
+  ],
+},
+{
+  id:"p12", level:3, kind:"expo", title:"パンやさんの あさ",
+  sentences:[
+    `まちの パンやさんの あさは、とても はやく はじまります。`,
+    `まだ そらが くらい ごぜん${R("三","さん")}じ、パンしょくにんは もう しごとを して います。`,
+    `どうして そんなに はやく おきるのでしょうか。`,
+    `パンの もとに なる きじは、こねてから ふくらむまでに、なんじかんも かかります。`,
+    `おみせが あく あさ${R("八","はち")}じに やきたてを ならべるには、よあけまえから じゅんびを はじめる ひつようが あるのです。`,
+    `きじが ふくらんだら、かたちを つくり、あつい かまで やきあげます。`,
+    `おみせに あまい においが ひろがる ころ、まちも すこしずつ ${R("目","め")}を さまします。`,
+    `やきたての パンの うらがわには、しょくにんの ながい あさが かくれて いるのです。`,
+  ],
+  questions:[
+    { type:"だれ・なに", q:"パンしょくにんが しごとを して いるのは、なんじからですか。",
+      choices:["ごぜん三じ","あさ八じ","おひるの 十二じ"], answer:0, evidence:[1],
+      explain:"「まだ そらが くらい ごぜん三じ、パンしょくにんは もう しごとを して います」と あるね。" },
+    { type:"りゆう", q:"パンしょくにんが はやく おきるのは、なぜですか。",
+      choices:["あさの まちを 見たいから","きじが ふくらむまでに なんじかんも かかるから","よるに ねむれないから"], answer:1, evidence:[3,4],
+      explain:"きじが ふくらむのに じかんが かかるから、おみせが あく まえに じゅんびを はじめる ひつようが あるんだね。" },
+    { type:"じゅんばん", q:"きじが ふくらんだら、つぎに することは なんですか。",
+      choices:["かまで やきあげる","かたちを つくる","おみせに ならべる"], answer:1, evidence:[5],
+      explain:"「ふくらんだら、かたちを つくり、あつい かまで やきあげます」。かたちづくりが さきだよ。" },
+  ],
+},
+];
+
+const LEVELS = [
+  { n:1, name:"みならい たんてい", desc:"みじかい おはなしで、しょうこさがしの きほんを おぼえよう。" },
+  { n:2, name:"いちにんまえ たんてい", desc:"じゅんばんや きもちの なぞに ちょうせんしよう。" },
+  { n:3, name:"めいたんてい", desc:"ながい 文しょうから、いちばん だいじな ことを 見つけよう。" },
+];
+
+const PRAISE = [
+  "その ちょうし! りっぱな たんていだ。",
+  "おみごと! しょうこを 見つけたね。",
+  "すばらしい! 文しょうを よく よめて いるよ。",
+  "せいかい! 目の つけどころが いいね。",
+];
+
+/* ================= 保存 ================= */
+const KEY = "yomitori-tantei-v1";
+function loadSave(){
+  try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; }
+}
+function store(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
+let save = loadSave();
+save.passages = save.passages || {};
+save.skills = save.skills || {};
+save.settings = save.settings || { vertical:false, sound:true };
+
+function recordSkill(type, firstTryCorrect){
+  const s = save.skills[type] || { t:0, c:0 };
+  s.t += 1; if(firstTryCorrect) s.c += 1;
+  save.skills[type] = s; store(save);
+}
+
+/* ================= 効果音 ================= */
+let actx = null;
+function beep(kind){
+  if(!save.settings.sound) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t = actx.currentTime;
+    const notes = kind==="good" ? [[660,0,.12],[880,.13,.2]] : [[233,0,.18]];
+    notes.forEach(([f,off,dur])=>{
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      g.gain.setValueAtTime(.001, t+off);
+      g.gain.exponentialRampToValueAtTime(.18, t+off+.02);
+      g.gain.exponentialRampToValueAtTime(.001, t+off+dur);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t+off); o.stop(t+off+dur+.05);
+    });
+  }catch(e){}
+}
+
+/* ================= 音読 ================= */
+let speaking = false;
+function stopSpeech(){
+  speaking = false;
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  document.querySelectorAll(".story .s.reading").forEach(el=>el.classList.remove("reading"));
+  const b = document.getElementById("readBtn");
+  if(b){ b.setAttribute("aria-pressed","false"); b.textContent = "🔈 きく"; }
+}
+function plainText(html){
+  const d = document.createElement("div");
+  d.innerHTML = html;
+  d.querySelectorAll("rt").forEach(rt=>rt.remove());
+  return d.textContent;
+}
+function readAloud(passage){
+  if(!window.speechSynthesis){ return; }
+  if(speaking){ stopSpeech(); return; }
+  speaking = true;
+  const b = document.getElementById("readBtn");
+  if(b){ b.setAttribute("aria-pressed","true"); b.textContent = "⏹ とめる"; }
+  const spans = Array.from(document.querySelectorAll(".story .s"));
+  let i = 0;
+  const next = ()=>{
+    if(!speaking || i >= passage.sentences.length){ stopSpeech(); return; }
+    spans.forEach(el=>el.classList.remove("reading"));
+    const cur = spans[i];
+    if(cur){ cur.classList.add("reading"); cur.scrollIntoView({block:"nearest", inline:"nearest", behavior:"smooth"}); }
+    const u = new SpeechSynthesisUtterance(plainText(passage.sentences[i]));
+    u.lang = "ja-JP"; u.rate = .85;
+    u.onend = ()=>{ i++; next(); };
+    u.onerror = ()=>{ stopSpeech(); };
+    speechSynthesis.speak(u);
+  };
+  next();
+}
+
+/* ================= 画面 ================= */
+const app = document.getElementById("app");
+function el(html){ const t = document.createElement("template"); t.innerHTML = html.trim(); return t.content; }
+
+function starsHtml(got, total){
+  let s = "";
+  for(let i=0;i<total;i++) s += `<span class="${i<got?"":"off"}">★</span>`;
+  return s;
+}
+
+/* ---- ホーム ---- */
+function showHome(){
+  stopSpeech();
+  const doneAll = PASSAGES.every(p => (save.passages[p.id]||{}).done);
+  let body = `
+    <div class="toprow">
+      <button id="soundBtn">${save.settings.sound?"🔊 おと あり":"🔇 おと なし"}</button>
+      <button id="parentBtn">おうちの人へ</button>
+    </div>
+    <header class="cover">
+      <div class="glass" aria-hidden="true"><div class="lens"></div><div class="grip"></div></div>
+      <h1>よみとりたんてい</h1>
+      <p class="tagline">こたえは、いつも 文しょうの なかに ある。</p>
+      ${doneAll ? `<span class="allclear">ぜんぶ<br>かいけつ!</span>` : ""}
+    </header>`;
+  LEVELS.forEach(lv=>{
+    body += `<section class="chapter"><h2>だい${lv.n}しょう 「${lv.name}」 <span class="rank">${lv.desc}</span></h2><div class="cards">`;
+    PASSAGES.filter(p=>p.level===lv.n).forEach(p=>{
+      const rec = save.passages[p.id]||{};
+      body += `
+        <button class="pcard" data-p="${p.id}">
+          <span class="kind ${p.kind}">${p.kind==="story"?"ものがたり":"せつめい文"}</span>
+          <span class="ttl">${p.title}</span>
+          <span class="stars" aria-label="ほし${rec.stars||0}こ">${starsHtml(rec.stars||0, p.questions.length)}</span>
+          ${rec.done?`<span class="stamp-mini">かい<br>けつ</span>`:""}
+        </button>`;
+    });
+    body += `</div></section>`;
+  });
+  body += `<div class="homefoot"><button id="resetBtn">きろくを けす</button></div>`;
+  app.innerHTML = body;
+
+  app.querySelectorAll(".pcard").forEach(b=> b.addEventListener("click", ()=> showReading(b.dataset.p)));
+  document.getElementById("parentBtn").addEventListener("click", showParent);
+  document.getElementById("soundBtn").addEventListener("click", (e)=>{
+    save.settings.sound = !save.settings.sound; store(save);
+    e.target.textContent = save.settings.sound?"🔊 おと あり":"🔇 おと なし";
+  });
+  const rb = document.getElementById("resetBtn");
+  rb.addEventListener("click", ()=>{
+    if(rb.dataset.arm){ localStorage.removeItem(KEY); save = {passages:{},skills:{},settings:save.settings}; showHome(); }
+    else{ rb.dataset.arm = "1"; rb.textContent = "ほんとうに けす?(もういちど おすと きえます)"; }
+  });
+}
+
+/* ---- 読解 ---- */
+function showReading(pid){
+  stopSpeech();
+  const p = PASSAGES.find(x=>x.id===pid);
+  const state = { qi:0, tries:0, stars:0 };
+
+  app.innerHTML = `
+    <div class="bar">
+      <button id="backBtn">← もどる</button>
+      <span class="ttl">${p.title} <small style="color:var(--ink-soft)">(${p.kind==="story"?"ものがたり":"せつめい文"})</small></span>
+      <button id="readBtn" aria-pressed="false">🔈 きく</button>
+      <button id="dirBtn" aria-pressed="${save.settings.vertical}">${save.settings.vertical?"よこがきに する":"たてがきに する"}</button>
+    </div>
+    <div class="storywrap">
+      <div class="story ${save.settings.vertical?"vertical":""}" id="story"></div>
+      <p class="evi-note hidden" id="eviNote">🔍 しょうこの 文に 目じるしを つけたよ。よく よんでから、もういちど!</p>
+    </div>
+    <div class="qcard" id="qcard"></div>`;
+
+  const story = document.getElementById("story");
+  story.innerHTML = p.sentences.map((s,i)=>`<span class="s" data-i="${i}">${s}</span>`).join("");
+
+  document.getElementById("backBtn").addEventListener("click", showHome);
+  document.getElementById("readBtn").addEventListener("click", ()=>readAloud(p));
+  document.getElementById("dirBtn").addEventListener("click", (e)=>{
+    save.settings.vertical = !save.settings.vertical; store(save);
+    story.classList.toggle("vertical", save.settings.vertical);
+    e.target.textContent = save.settings.vertical?"よこがきに する":"たてがきに する";
+    e.target.setAttribute("aria-pressed", String(save.settings.vertical));
+  });
+
+  function clearEvidence(){
+    story.querySelectorAll(".s.evi").forEach(el=>el.classList.remove("evi"));
+    document.getElementById("eviNote").classList.add("hidden");
+  }
+  function markEvidence(q, note){
+    q.evidence.forEach(i=>{
+      const el = story.querySelector(`.s[data-i="${i}"]`);
+      if(el) el.classList.add("evi");
+    });
+    const first = story.querySelector(".s.evi");
+    if(first) first.scrollIntoView({block:"nearest", inline:"nearest", behavior:"smooth"});
+    if(note) document.getElementById("eviNote").classList.remove("hidden");
+  }
+
+  function renderQuestion(){
+    clearEvidence();
+    state.tries = 0;
+    const q = p.questions[state.qi];
+    const dots = p.questions.map((_,i)=>
+      `<i class="${i<state.qi?"got":""}${i===state.qi?"now":""}"></i>`).join("");
+    document.getElementById("qcard").innerHTML = `
+      <div class="qhead">
+        <span class="qtype">${q.type} の なぞ</span>
+        <span style="color:var(--ink-soft);font-size:.85rem;">なぞ ${state.qi+1}/${p.questions.length}</span>
+        <span class="dots">${dots}</span>
+      </div>
+      <p class="qtext">${q.q}</p>
+      <div class="choices">
+        ${q.choices.map((c,i)=>`<button data-i="${i}">${c}</button>`).join("")}
+      </div>
+      <div id="fb"></div>
+      <div class="nextrow hidden" id="nextrow">
+        <button id="nextBtn">${state.qi < p.questions.length-1 ? "つぎの なぞへ →" : "けっかを 見る →"}</button>
+      </div>`;
+
+    document.querySelectorAll(".choices button").forEach(btn=>{
+      btn.addEventListener("click", ()=>answer(q, btn));
+    });
+    document.getElementById("nextBtn").addEventListener("click", ()=>{
+      if(state.qi < p.questions.length-1){ state.qi++; renderQuestion(); }
+      else showResult(p, state);
+    });
+  }
+
+  function answer(q, btn){
+    const i = Number(btn.dataset.i);
+    const fb = document.getElementById("fb");
+    if(i === q.answer){
+      const firstTry = state.tries === 0;
+      if(firstTry) state.stars++;
+      recordSkill(q.type, firstTry);
+      beep("good");
+      document.querySelectorAll(".choices button").forEach(b=>b.disabled = true);
+      btn.classList.add("right");
+      clearEvidence(); markEvidence(q, false);
+      const praise = PRAISE[(state.qi + p.questions.indexOf(q) + i) % PRAISE.length];
+      fb.innerHTML = `<div class="fb good">${firstTry ? "★ いちどで せいかい! " : ""}${praise}
+        <span class="why">${q.explain}</span></div>`;
+      document.getElementById("nextrow").classList.remove("hidden");
+    }else{
+      state.tries++;
+      beep("bad");
+      btn.classList.add("wrong","shake");
+      btn.disabled = true;
+      if(state.tries === 1){
+        markEvidence(q, true);
+        fb.innerHTML = `<div class="fb retry">おしい! こたえは かならず 文しょうの なかに あるよ。目じるしの 文を よんで、もういちど。</div>`;
+      }else{
+        recordSkill(q.type, false);
+        document.querySelectorAll(".choices button").forEach(b=>{
+          b.disabled = true;
+          if(Number(b.dataset.i)===q.answer) b.classList.add("right");
+        });
+        fb.innerHTML = `<div class="fb ans">こたえは 「${q.choices[q.answer]}」。<span class="why">${q.explain}</span></div>`;
+        document.getElementById("nextrow").classList.remove("hidden");
+      }
+    }
+  }
+
+  renderQuestion();
+}
+
+/* ---- 結果 ---- */
+function showResult(p, state){
+  stopSpeech();
+  const total = p.questions.length;
+  const rec = save.passages[p.id] || {};
+  rec.done = true;
+  rec.stars = Math.max(rec.stars||0, state.stars);
+  save.passages[p.id] = rec; store(save);
+
+  const perfect = state.stars === total;
+  app.innerHTML = `
+    <div class="result">
+      <div class="hanamaru"><span>${perfect ? "たいへん<br>よく<br>できました" : "かいけつ!"}</span></div>
+      <h2>「${p.title}」の じけん、かいけつ!</h2>
+      <div class="bigstars">${starsHtml(state.stars, total)}</div>
+      <p>${perfect
+        ? "ぜんぶ いちどで せいかい! きみは ほんものの めいたんていだ。"
+        : "しょうこの 文を 見つけて、さいごまで やりとげたね。ほしが たりなかった なぞは、また ちょうせんすると ★が ふえるよ。"}</p>
+      <div class="btns">
+        <button id="againBtn">もういちど とく</button>
+        <button id="homeBtn">つぎの じけんへ →</button>
+      </div>
+    </div>`;
+  document.getElementById("againBtn").addEventListener("click", ()=>showReading(p.id));
+  document.getElementById("homeBtn").addEventListener("click", showHome);
+}
+
+/* ---- 保護者 ---- */
+function showParent(){
+  stopSpeech();
+  const types = Object.keys(SKILLS);
+  let rows = "";
+  let weakest = null;
+  types.forEach(t=>{
+    const s = save.skills[t] || {t:0,c:0};
+    const rate = s.t ? s.c/s.t : null;
+    if(s.t >= 2 && (weakest===null || rate < weakest.rate)) weakest = {t, rate};
+    rows += `
+      <div class="skill">
+        <div class="lab"><b>${SKILLS[t].label}<span style="color:var(--ink-soft)"> — ${SKILLS[t].parent}</span></b>
+        <span class="num">${s.t ? `${s.c} / ${s.t} 問` : "未実施"}</span></div>
+        <div class="meter"><i class="${rate!==null && rate<.5?"low":""}" style="width:${rate===null?0:Math.round(rate*100)}%"></i></div>
+      </div>`;
+  });
+  const doneCount = PASSAGES.filter(p=>(save.passages[p.id]||{}).done).length;
+  app.innerHTML = `
+    <div class="bar"><button id="backBtn">← もどる</button><span class="ttl">おうちの人へ — 学習のようす</span></div>
+    <div class="parent">
+      <p class="parentnote">初回に正解できたかどうかを設問タイプ別に記録しています(${doneCount}/12話 完了)。バーが赤いタイプは正答率5割未満です。同じ話を解き直した分も集計に含みます。</p>
+      ${rows}
+      <div class="advice">
+        ${weakest
+          ? `<b>いま伸ばしどころ: 「${SKILLS[weakest.t].label}」</b><br>${SKILLS[weakest.t].advice}`
+          : `まだデータが少ない状態です。2〜3話解くと、タイプ別の得意・苦手が見えてきます。`}
+        <br><br>このアプリは、間違えたときに正解を教える前に「証拠の文」をハイライトして再挑戦させる作りです。おうちで音読の宿題を見るときも、「どの文に書いてあった?」と本文を指ささせる声かけが同じ効果を持ちます。
+      </div>
+    </div>`;
+  document.getElementById("backBtn").addEventListener("click", showHome);
+}
+
+showHome();
+</script>
+
+</body>
+</html>
